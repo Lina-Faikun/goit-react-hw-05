@@ -1,61 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { fetchImages } from './services/pixabay-api';
-import SearchBar from './components/SearchBar/SearchBar';
-import ImageGallery from './components/ImageGallery/ImageGallery';
-import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
-import Loader from './components/Loader/Loader';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Navigation from './components/Navigation/Navigation';
+import { Suspense, lazy } from 'react';
 
-function App() {
-  const [query, setQuery] = useState('');
-  const [images, setImages] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
+const MoviesPage = lazy(() => import('./pages/MoviesPage/MoviesPage'));
+const MovieDetailsPage = lazy(() => import('./pages/MovieDetailsPage/MovieDetailsPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
 
-  useEffect(() => {
-    if (!query) return;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const data = await fetchImages(query, page);
-        setImages((prevImages) =>
-          page === 1 ? data.hits : [...prevImages, ...data.hits]
-        );
-      } catch (err) {
-        setError('Something went wrong!');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [query, page]);
-
-  const handleSearch = (searchQuery) => {
-    setQuery(searchQuery);
-    setPage(1);
-    setImages([]);
-  };
-
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
+export default function App() {
   return (
-    <div className="app-container">
-      <SearchBar onSearch={handleSearch} />
-      {error && <ErrorMessage message={error} />}
-      <ImageGallery images={images} />
-      {isLoading && <Loader />}
-      {images.length > 0 && !isLoading && (
-        <LoadMoreBtn onClick={handleLoadMore} />
-      )}
-    </div>
+    <>
+      <Navigation />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/movies/:movieId/*" element={<MovieDetailsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </>
   );
 }
-
-export default App;
