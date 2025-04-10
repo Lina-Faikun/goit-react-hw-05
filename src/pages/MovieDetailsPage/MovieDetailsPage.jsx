@@ -1,11 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { getMovieDetails } from '../../services/api';
 import styles from './MovieDetailsPage.module.css';
 
 const MovieDetailsPage = () => {
-  const { id } = useParams();
+  const { movieId } = useParams();
   const location = useLocation();
   const backLinkHref = location.state?.from || '/';
 
@@ -14,14 +13,14 @@ const MovieDetailsPage = () => {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const data = await getMovieDetails(id);
+        const data = await getMovieDetails(movieId); // тут замінено id на movieId
         setMovie(data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchMovie();
-  }, [id]);
+  }, [movieId]); // movieId використовуємо як залежність
 
   if (!movie) return <div>Loading...</div>;
 
