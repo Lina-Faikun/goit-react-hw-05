@@ -1,46 +1,83 @@
-import { useEffect, useState } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
-import { getMovieDetails } from '../../services/api';
-import styles from './MovieDetailsPage.module.css';
+// MovieDetailsPage.jsx
+import { useEffect, useState, useRef, Suspense } from 'react';
+import { useParams, useLocation, Link, Outlet } from 'react-router-dom';
+import axios from 'axios';
+
+import css from './MovieDetailsPage.module.css';
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const location = useLocation();
-  const backLinkHref = location.state?.from || '/';
+  const backLinkRef = useRef(location.state?.from || '/movies');
 
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchMovieDetails = async () => {
       try {
-        const data = await getMovieDetails(movieId); // тут замінено id на movieId
-        setMovie(data);
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieId}`,
+          {
+            headers: {
+              Authorization:
+                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNGI0MGEyMmRmYWY1NjNmMDgxZWM4OGU3OTljM2QzMyIsIm5iZiI6MTc0NDE1Njg5MC41NjksInN1YiI6IjY3ZjViOGRhMjQwZTY1OTk2ODk5NDY5OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.z2FHko5O6aBo9mpke6mgp-3CXUvSb3ZqQtpvzNOTDcY', 
+            },
+          }
+        );
+        setMovie(response.data);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching movie details:', error);
       }
     };
-    fetchMovie();
-  }, [movieId]); // movieId використовуємо як залежність
 
-  if (!movie) return <div>Loading...</div>;
+    fetchMovieDetails();
+  }, [movieId]);
+
+  if (!movie) {
+    return <div>Loading...</div>;
+  }
+
+  const { title, overview, poster_path, vote_average, genres } = movie;
+  const posterUrl = poster_path
+    ? `https://image.tmdb.org/t/p/w500${poster_path}`
+    : 'https://via.placeholder.com/300x450?text=No+Image';
 
   return (
-    <div className={styles.detailsPage}>
-      <Link className={styles.goBack} to={backLinkHref}>
-        ← Go back
+    <div className={css.detailsPage}>
+      <Link to={backLinkRef.current} className={css.goBack}>
+        Go back
       </Link>
-      <div className={styles.content}>
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-          alt={movie.title}
-        />
-        <div className={styles.info}>
-          <h1>{movie.title}</h1>
-          <p><strong>Overview:</strong> {movie.overview}</p>
-          <p><strong>Genres:</strong> {movie.genres.map(g => g.name).join(', ')}</p>
-          <p><strong>Rating:</strong> {movie.vote_average}</p>
+
+      <div className={css.content}>
+        <img src={posterUrl} alt={title} />
+        <div className={css.info}>
+          <h1>{title}</h1>
+          <p>
+            <strong>User Score:</strong> {Math.round(vote_average * 10)}%
+          </p>
+          <h3>Overview</h3>
+          <p>{overview}</p>
+          <h3>Genres</h3>
+          <p>{genres.map(genre => genre.name).join(', ')}</p>
         </div>
       </div>
+
+      <div className={css.additional}>
+        <h3>Additional information</h3>
+        <ul className={css.links}>
+          <li>
+            <Link to="cast" className={css.link}>Cast</Link>
+          </li>
+          <li>
+            <Link to="reviews" className={css.link}>Reviews</Link>  
+          </li>
+        </ul>
+      </div>
+
+ 
+      <Suspense fallback={<div>Loading section...</div>}>
+        <Outlet context={{ movieId }} />
+      </Suspense>
     </div>
   );
 };

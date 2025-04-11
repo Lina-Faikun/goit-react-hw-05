@@ -1,4 +1,4 @@
-/* Стилі для детальної сторінки фільму */
+
 .detailsPage {
     padding: 50px 20px;
     background: #f4f4f4;
@@ -63,4 +63,19 @@
     .content img {
         max-width: 90%;
     }
+}
+
+.link {
+    font-size: 20px;
+     color: #ff6347;
+    text-decoration: none;
+    margin-bottom: 10px;
+    display: inline-block;
+    transition: color 0.3s ease;
+    list-style: none;
+   
+}
+
+.link:hover {
+    color: #ff4500;
 }

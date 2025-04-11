@@ -1,0 +1,51 @@
+/* MovieCast.module.css або MovieReviews.module.css */
+.movieCast,
+.movieReviews {
+    margin-top: 20px;
+}
+
+.movieCast h2,
+.movieReviews h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+   
+}
+
+.movieCast ul,
+.movieReviews ul {
+    list-style: none;
+    padding: 0;
+}
+
+.movieCast li,
+.movieReviews li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.movieCast li strong,
+.movieReviews li strong {
+    font-size: 20px;
+    color: #333;
+}
+
+.movieReviews li p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Стилі для силок в MovieDetailsPage */
+/* .movieCast a,
+.movieReviews a {
+    color: #ff6347;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.movieCast a:hover,
+.movieReviews a:hover {
+    color: #ff4500;
+} */

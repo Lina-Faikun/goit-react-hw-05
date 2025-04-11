@@ -10,3 +10,6 @@ body {
     color: #0f0f0f;
     line-height: 1.6;
 }
+li {
+    list-style: none;
+}
