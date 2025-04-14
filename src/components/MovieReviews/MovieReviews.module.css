@@ -1,4 +1,4 @@
-/* MovieCast.module.css або MovieReviews.module.css */
+
 .movieCast,
 .movieReviews {
     margin-top: 20px;
@@ -36,16 +36,3 @@
     line-height: 1.6;
 }
 
-/* Стилі для силок в MovieDetailsPage */
-/* .movieCast a,
-.movieReviews a {
-    color: #ff6347;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.movieCast a:hover,
-.movieReviews a:hover {
-    color: #ff4500;
-} */

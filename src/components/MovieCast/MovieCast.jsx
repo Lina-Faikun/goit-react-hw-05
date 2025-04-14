@@ -1,11 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useOutletContext } from 'react-router-dom';
+import { useParams } from 'react-router-dom'; 
 import styles from './MovieCast.module.css';
 
 const MovieCast = () => {
-  const { movieId } = useOutletContext();
+  const { movieId } = useParams(); 
   const [cast, setCast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
